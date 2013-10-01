@@ -1,9 +1,10 @@
 #
 ## Load data
 #
-p.all		= read.csv('/Users/mdijkstra/development/voc/data/PhenotypeData2017-08-06BloodCellCountParameters.txt', sep='\t', row.names=1)
-voc.all		= read.csv('/Users/mdijkstra/development/voc/data/VOCData/VOCDataCombined.txt', sep='\t', row.names=1)
-couple.all	= read.csv('/Users/mdijkstra/development/voc/data/VOCData/GenotypeToVOCCoupling.txt', sep='\t', header=F, as.is=T)
+#p.all		= read.csv('/Volumes/lldeep/data/PhenotypeData2017-08-06BloodCellCountParameters.txt', sep='\t', row.names=1)
+if (exists(".p.all"))		p.all = .p.all				else .p.all =		p.all		= dget('/Volumes/lldeep/data/phenotypeDataBloodCellCountParametersAll.RData')
+if (exists(".voc.all"))		voc.all = .voc.all			else .voc.all =		voc.all		= read.csv('/Volumes/lldeep/data/VOCData/VOCDataCombined.txt', sep='\t', row.names=1)
+if (exists(".couple.all"))	couple.all = .couple.all	else .couple.all =	couple.all	= read.csv('/Volumes/lldeep/data/VOCData/GenotypeToVOCCoupling.txt', sep='\t', header=F, as.is=T)
 
 #
 ## Preprocess VOC
@@ -24,6 +25,11 @@ couple = couple.all[index.couple.overlap, ]
 
 # Create Pheno matrix with only individuals for which we also have VOC data
 p = p.all[couple[, 1], ]
+
+# Convert characters to numeric
+p = as.matrix(p)
+class(p) = "numeric"
+
 
 # Create VOC matrix corresponding to Pheno matrix
 voc.matching.subset = voc.all[, as.character(couple[, 2])]
