@@ -96,3 +96,19 @@ fdr.quick = function(p.values.real, p.values.random, n.elements = 2e3)
 	
 	list(p.unique = p.unique, fdr = fdr)
 }
+
+fdr.manyIterations = function(p.values.real, p.values.random, n.random.iterations, n.elements = 2e3)
+{
+	a	= sort(as.vector(p.values.real[which(!is.na(p.values.real))]))
+	b	= sort(as.vector(p.values.random[which(!is.na(p.values.random))]))
+	
+	p.values	= NULL
+	fdr			= NULL
+	i.max = min(length(a), n.elements)
+	for (i in 1:i.max)
+	{
+		fdr[i] = length(which(b <= a[i])) / n.random.iterations / i
+	}
+
+	list(p = a[1:i.max], fdr = fdr)
+}
